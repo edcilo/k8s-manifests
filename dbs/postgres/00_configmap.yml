@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: dbs
+  name: postgres-configmap
+data:
+  PSQL_USER: postgres

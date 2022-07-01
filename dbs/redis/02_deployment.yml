@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dbs
+  name:  redis-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  redis
+    spec:
+      containers:
+      - name:  redis
+        image:  redis:7.0-alpine
+        imagePullPolicy: Always
+        command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+        ports:
+        - name: redis
+          containerPort: 6379
+        resources:
+          requests:
+            memory: 200Mi
+            cpu: 100m
+          limits:
+            memory: 300Mi
+            cpu: 200m
+        volumeMounts:
+        - name: redis-volume
+          mountPath: /usr/local/etc/redis/
+      volumes:
+      - name: redis-volume
+        configMap:
+          name: redis-configmap
+          items:
+          - key: redis.conf
+            path: redis.conf

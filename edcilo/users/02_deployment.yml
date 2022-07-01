@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: edcilo
+  name:  users-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+      containers:
+      - name:  users
+        image:  edcilo/edc_users:1.0.0
+        imagePullPolicy: Always
+        ports:
+        - name: users
+          containerPort: 5000
+        env:
+          - name: FLASK_ENV
+            valueFrom:
+              configMapKeyRef:
+                name: users-configmap
+                key: FLASK_ENV
+          - name: APP_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: users-configmap
+                key: APP_NAME
+          - name: APP_VERSION
+            valueFrom:
+              configMapKeyRef:
+                name: users-configmap
+                key: APP_VERSION
+          - name: APP_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: users-secrets
+                key: APP_SECRET_KEY
+          - name: APP_TIMEZONE
+            valueFrom:
+              configMapKeyRef:
+                name: users-configmap
+                key: APP_TIMEZONE
+          - name: DB_CONNECTION
+            valueFrom:
+              configMapKeyRef:
+                name: users-configmap
+                key: DB_CONNECTION
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: users-configmap
+                key: DB_HOST
+          - name: DB_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: users-configmap
+                key: DB_PORT
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: users-configmap
+                key: DB_DATABASE
+          - name: DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: users-configmap
+                key: DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: users-secrets
+                key: DB_PASSWORD
+          - name: REDIS_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: users-configmap
+                key: REDIS_HOST
+          - name: REDIS_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: users-configmap
+                key: REDIS_PORT
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: users-secrets
+                key: REDIS_PASSWORD
+        resources:
+          requests:
+            memory: 200Mi
+            cpu: 200m
+          limits:
+            memory: 300Mi
+            cpu: 300m

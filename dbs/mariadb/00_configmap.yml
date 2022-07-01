@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: dbs
+  name: mariadb-configmap
+data:
+  MARIADB_USER: mariadb

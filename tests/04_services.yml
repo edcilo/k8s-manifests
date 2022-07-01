@@ -1,0 +1,68 @@
+# https://kubernetes.io/docs/concepts/workloads/pods/
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test
+  labels:
+    app: busybox
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["tail", "-f", "/dev/null"]
+
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: test
+spec:
+  selector:
+    app: nginx
+  type: ClusterIP
+  ports:
+  - name: web
+    protocol: TCP
+    port: 80
+    targetPort: 80
+
+
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-port-service
+  namespace: test
+spec:
+  selector:
+    app: nginx
+  type: NodePort
+  ports:
+  - name: web
+    protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30100
+---
+
+
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-lb-service
+  namespace: test
+spec:
+  selector:
+    app: nginx
+  type: LoadBalancer
+  ports:
+  - name: web
+    protocol: TCP
+    port: 8080
+    targetPort: 80
+---
